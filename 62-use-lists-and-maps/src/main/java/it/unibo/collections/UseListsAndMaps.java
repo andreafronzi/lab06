@@ -48,10 +48,8 @@ public final class UseListsAndMaps {
          * (Suggestion: use a temporary variable)
          */
         Integer tmp = list.getFirst();
-        list.removeFirst();
-        list.addFirst(list.getLast());
-        list.removeLast();
-        list.addLast(tmp);
+        list.set(0, list.getLast());
+        list.set(list.size() - 1, tmp);
         /*
          * 4) Using a single for-each, print the contents of the arraylist.
          */
