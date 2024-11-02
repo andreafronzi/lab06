@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+
 /**
  * Example class using {@link List} and {@link Map}.
  *
@@ -17,6 +20,7 @@ public final class UseListsAndMaps {
     private static final int INITIAL_VALUE = 1000;
     private static final int FINAL_VALUE = 2000;
     private static final int ELEM = 100_000;
+    private static final int READS = INITIAL_VALUE; 
 
     private UseListsAndMaps() {
     }
@@ -68,32 +72,14 @@ public final class UseListsAndMaps {
             list.addFirst(Integer.valueOf(i));
         }
         time = System.nanoTime() - time;
-        var millis = TimeUnit.NANOSECONDS.toMillis(time);
-        System.out.println(// NOPMD
-            "Converting "
-                + list.size()
-                + " ints to String and inserting them in a Set took "
-                + time
-                + "ns ("
-                + millis
-                + "ms)"
-        );
+        System.out.println("Inserting " + ELEM + " element in a array list are required " + Long.valueOf(time).toString() + "ns " + timeConvert(time));
 
         time = System.nanoTime();
         for(int i = 0; i < ELEM; i++){
             list2.addFirst(Integer.valueOf(i));
         }
         time = System.nanoTime() - time;
-        millis = TimeUnit.NANOSECONDS.toMillis(time);
-        System.out.println(// NOPMD
-            "Converting "
-                + list2.size()
-                + " ints to String and inserting them in a Set took "
-                + time
-                + "ns ("
-                + millis
-                + "ms)"
-        );
+        System.out.println("Inserting " + ELEM + " element in a linked list are required " + Long.valueOf(time).toString() + "ns " + timeConvert(time));
         /*
          * 6) Measure the performance of reading 1000 times an element whose
          * position is in the middle of the collection for both ArrayList and
@@ -102,36 +88,18 @@ public final class UseListsAndMaps {
          */
         final int middleElement = list.size() / 2;
         time = System.nanoTime();
-        for(int i = 0; i < INITIAL_VALUE; i++){
+        for(int i = 0; i < READS; i++){
             list.get(middleElement);
         }
         time = System.nanoTime() - time;
-        millis = TimeUnit.NANOSECONDS.toMillis(time);
-        System.out.println(// NOPMD
-            "Converting "
-                + list.size()
-                + " ints to String and inserting them in a Set took "
-                + time
-                + "ns ("
-                + millis
-                + "ms)"
-        );
+        System.out.println("Reading " + READS + " elements in the middle of an Array list took " + Long.valueOf(time).toString() + "ns " + timeConvert(time));
 
         time = System.nanoTime();
         for(int i = 0; i < INITIAL_VALUE; i++){
             list2.get(middleElement);
         }
         time = System.nanoTime() - time;
-        millis = TimeUnit.NANOSECONDS.toMillis(time);
-        System.out.println(// NOPMD
-            "Converting "
-                + list2.size()
-                + " ints to String and inserting them in a Set took "
-                + time
-                + "ns ("
-                + millis
-                + "ms)"
-        );
+        System.out.println("Reading " + READS + " elements in the middle of an Array list took " + Long.valueOf(time).toString() + "ns " + timeConvert(time));
         /*
          * 7) Build a new Map that associates to each continent's name its
          * population:
@@ -159,10 +127,15 @@ public final class UseListsAndMaps {
         map.put("Europe", 742_452_000L);
         map.put("Oceania", 38_304_000L);
 
-        final var continents = map.entrySet();
-        for(final var e : continents){
-            System.out.println(e);
+        long worldpopulation = 0;
+        for(final long e: map.values()){
+            worldpopulation = worldpopulation + e;
         }
+
+        System.out.println("We are " + worldpopulation);
         
+    }
+    private static String timeConvert(final long nanosecond){
+        return NANOSECONDS.toMillis(nanosecond) + "ms";
     }
 }
